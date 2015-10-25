@@ -202,7 +202,7 @@ void BigDiv(char* a, char* b, char* quotient, char* remainder)
 	begin = 1;
 	while (last < len1){
 		if (BigComp(remainder, b) == -1){
-			if (pQuotient)
+			if (pQuotient != 0)
 				quotient[pQuotient++] = '0';
 		}
 		else{
