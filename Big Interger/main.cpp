@@ -41,8 +41,8 @@ int _tmain(int argc, _TCHAR* argv[])
 			free(num3);
 		}
 		else if (op == '/'){
-			num3 = (char*)malloc(sizeof(char)*(len1 + 1));
-			num4 = (char*)malloc(sizeof(char)*(len2 + 1));
+			num3 = (char*)malloc(sizeof(char)*(len1 + 2));
+			num4 = (char*)malloc(sizeof(char)*(len1 + 2));
 			BigDiv(num1, num2, num3, num4);
 			printf("The result is :\n%s\n%s\n", num3, num4);
 			free(num3);

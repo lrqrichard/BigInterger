@@ -1,7 +1,29 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include <stdio.h>
 #include <string.h>
 #include <malloc.h>
+int BigComp(char* a, char* b) //1:a>b 0:a==b -1:a<b
+{
+	while (*a == '0'  && *(a + 1) != 0)a++;
+	while (*b == '0'  && *(b + 1) != 0)b++;
+	int len1, len2;
+	len1 = strlen(a);
+	len2 = strlen(b);
+	if (len1 < len2)
+		return -1;
+	else if (len1 > len2)
+		return 1;
+	else{
+		int i;
+		for (i = 0; i < len1; i++){
+			if (a[i] < b[i])
+				return -1;
+			else if (a[i] > b[i])
+				return 1;
+		}
+		return 0;
+	}
+}
 void BigAdd(char* a, char* b, char* answer)
 {
 	char *na, *nb,*ta;
@@ -66,7 +88,7 @@ void BigSub(char* a, char* b, char* answer)
 		na[i] = a[len1 - i - 1];
 	for (i = 0; i < len2; i++)
 		nb[i] = b[len2 - i - 1];
-	if (len2 > len1){
+	if (BigComp(a, b) == -1){
 		char * tempc;
 		int templen;
 		tempc = na;
@@ -76,24 +98,6 @@ void BigSub(char* a, char* b, char* answer)
 		len1 = len2;
 		len2 = templen;
 		answersign = '-';
-	}
-	if (len1 == len2){
-		i = 0;
-		while (i < len1){
-			if (a[i] < b[i]){
-				char * tempc;
-				int templen;
-				tempc = na;
-				na = nb;
-				nb = tempc;
-				templen = len1;
-				len1 = len2;
-				len2 = templen;
-				answersign = '-';
-				break;
-			}
-			i++;
-		}
 	}
 	ta = (char*)malloc(sizeof(char)*(len1));
 	for (i = 0; i < len1; i++){
@@ -169,28 +173,10 @@ void BigMul(char* a, char* b, char* answer)
 	free(ta);
 	return;
 }
-bool lessthan(char* a, char* b)
+
+void BigDiv(char* a, char* b, char* quotient, char* remainder)
 {
-	int len1, len2;
-	len1 = strlen(a);
-	len2 = strlen(b);
-	if (len1 < len2)
-		return true;
-	else if (len1 == len2){
-		int i;
-		for (i = 0; i < len1; i++){
-			if (a[i] < b[i])
-				return true;
-		}
-		return false;
-	}
-	else
-		return false;
-}
-void BigDiv(char* a, char* b, char* answer1, char* answer2)
-{
-	char *ta, one[2] = {'1',0};
-	int bit1, bit2, bit3, len1, len2, i, j, maxlen;
+	int len1, len2, i;
 	while (*a == '0'  && *(a + 1) != 0)a++;
 	while (*b == '0'  && *(b + 1) != 0)b++;
 	if (*b == '0'){
@@ -199,21 +185,42 @@ void BigDiv(char* a, char* b, char* answer1, char* answer2)
 	}
 	len1 = strlen(a);
 	len2 = strlen(b);
-	ta = (char*)malloc(sizeof(char)*(len1+1));
-	for (i = 0; i < len1; i++)
-		answer1[i] = '0';
-	answer1[len1] = 0;
-	strcpy(ta, a);
-	while (1){
-		if (lessthan(ta,b)){
-			strcpy(answer2, ta);
-			break;
+	quotient[0] = '0';
+	quotient[1] = 0;
+	if (BigComp(a, b) == -1){
+		quotient[0] = '0';
+		quotient[1] = 0;
+		strcpy(remainder, a);
+		return;
+	}
+	int pQuotient, pRemainder, tmp, last, begin;
+	for (i = 0; i < len2; i++)
+		remainder[i] = a[i];
+	remainder[len2] = 0;
+	pQuotient = 0;
+	last = len2 - 1;
+	begin = 1;
+	while (last < len1){
+		if (BigComp(remainder, b) == -1){
+			if (pQuotient)
+				quotient[pQuotient++] = '0';
 		}
 		else{
-			BigSub(ta, b, ta);
-			BigAdd(answer1, one, answer1);
+			tmp = 0;
+			while (BigComp(remainder, b) >= 0){
+				BigSub(remainder, b, remainder);
+				tmp++;
+			}
+			quotient[pQuotient++] = tmp + '0';
 		}
+		last++;
+		pRemainder = 0;
+		while (remainder[pRemainder] != 0)
+			pRemainder++;
+		remainder[pRemainder] = a[last];
+		remainder[pRemainder + 1] = 0;
+		quotient[pQuotient] = 0;
 	}
-	free(ta);
+	quotient[pQuotient] = 0;
 	return;
 }
