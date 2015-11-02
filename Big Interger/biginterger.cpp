@@ -222,5 +222,8 @@ void BigDiv(char* a, char* b, char* quotient, char* remainder)
 		quotient[pQuotient] = 0;
 	}
 	quotient[pQuotient] = 0;
+	pRemainder = 0;
+	while (remainder[pRemainder] == '0'&&remainder[pRemainder + 1] != 0)pRemainder++;
+	strcpy(remainder, remainder + pRemainder);
 	return;
 }
