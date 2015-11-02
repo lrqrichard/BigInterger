@@ -181,6 +181,10 @@ void BigDiv(char* a, char* b, char* quotient, char* remainder)
 	while (*b == '0'  && *(b + 1) != 0)b++;
 	if (*b == '0'){
 		printf("The second number cannot be 0!\n");
+		quotient[0] = '0';
+		remainder[0] = '0';
+		quotient[1] = 0;
+		remainder[1] = 0;
 		return;
 	}
 	len1 = strlen(a);
